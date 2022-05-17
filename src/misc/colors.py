@@ -24,4 +24,4 @@ class Colors:
     BRED = "\33[1;31m"
     BBRED = "\33[1;91m"
     BGREEN = "\33[1;32m"
-    BBGREEN = "\33[1;92m
+    BBGREEN = "\33[1;92m"
