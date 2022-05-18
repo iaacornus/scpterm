@@ -7,6 +7,10 @@
 
 Access the SCP Foundation database from your terminal.
 
+# Usage
+
+[![sample_1](samples/sample_1.gif)](samples/sample_1.gif)
+
 # Todo
 
 - [ ] Update function to fetch updates for repository.
