@@ -2,7 +2,8 @@ import argparse
 
 from rich.console import Console
 
-from utils.database_init import init_database
+from main import main
+from utils.database_init import database_init
 
 
 def program_options():
@@ -39,15 +40,19 @@ def program_options():
         "-d",
         "--decode",
         help="View the information of anomaly.",
-        action="store_true"
+        action="store"
     )
 
     args = parser.parse_args()
 
     try:
-        if args.init:
-            init_database(args.re)
+        if args.initiate:
+            database_init(args.re)
         elif args.fetch:
+            pass
+        elif args.decode:
+            main(args.decode)
+        else:
             pass
     except ConnectionError: # add other exceptions later
         console.log(
