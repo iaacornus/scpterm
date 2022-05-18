@@ -60,14 +60,30 @@ def database_init():
                             scp_num = f"0{i}"
                         elif len(f"{i}") == 3:
                             scp_num = f"{i}"
-                        scp_link = f"{link}/{scp_num}"
+                        scp_link = f"{link}/scp-{scp_num}"
                         anomalies.write(f"SCP-{scp_num}: {scp_link}\n")
 
                         console.log(
                             f"[turquoise4]> Fetching [turquoise4][cyan]SCP-{scp_num}[/cyan]"
                         )
 
-                    # fetch the html from the page
+                        # fetch the html from the page
+                        new_header = {"User-Agent": user_agent.get_random_user_agent()}
+                        scp_data = requests.get(scp_link, headers=new_header)
+                        soup = bs(scp_data.content, "html5lib")
+
+                        if scp_data.status_code in [i for i in range(200, 299)]:
+                            console.log(
+                                f"[turquoise4]> Metadata of [/turquoise4][cyan]SCP-{scp_num}[/cyan][turquoise4] accessed, status code: {scp_data.status_code}, writing to database ...[/turquoise4]"
+                            )
+                            with open(
+                                    f"database/anomalies.list.d/scp_{scp_num}.info", "w"
+                                ) as scp_info:
+                                scp_info.write(soup.prettify())
+                        else:
+                            console.log(
+                                f"[red]> Skipping [/red][cyan]SCP-{scp_num}[/cyan][red], connection error.[/red]"
+                            )
 
 
 database_init()
