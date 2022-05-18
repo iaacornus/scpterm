@@ -1,6 +1,4 @@
 import sys
-sys.path.append("..")
-
 import os
 from time import process_time
 from datetime import datetime as time
@@ -10,19 +8,35 @@ from random_user_agent.user_agent import UserAgent
 from bs4 import BeautifulSoup as bs
 from rich.console import Console
 
-def database_init():
+
+def database_init(re_init=False):
+    sys.path.append("[..")
+
     console = Console()
     user_agent = UserAgent()
 
     start_time = process_time()
     link = "https://the-scp.foundation/object"
 
-    if os.path.isfile("database/fetch"):
-        with open("database/fetch", "r") as data:
-            data_info = data.readlines()
+    with open("database/fetch", "r") as data:
+        data_info = data.readlines()
 
+    if re_init:
+        if "y" in console.input(
+                f"[bold][:] Database already exists (last fetch:[cyan]{data_info[1]}[/cyan]). Re-initiate? [/bold]"
+            ).lower():
+            for root, dirs, files in os.walk("database"):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+
+            console.log("[bold green][+] Database removed, re-initiating ...[/bold green]")
+        else:
+            console.log("[bold red][-] Process aborted.[/bold red]")
+            raise SystemExit
+
+    if os.path.isfile("database/fetch"):
         console.log(
-            f"[bold][+] Database already exists (last fetch:[cyan]{data_info[1]}[/cyan]).[/bold]"
+            f"[bold][?] Database already exists (last fetch:[cyan]{data_info[1]}[/cyan]).[/bold]"
         )
     else:
         try:
@@ -93,8 +107,5 @@ def database_init():
 
                 end_time = process_time()
                 console.log(
-                    f"[bold][green][+] Database initiated with total time of:[/green][cyan]{end_time-start_time}[/cyan][/bold]"
+                    f"[bold][green][+] Database initiated with total time of:[/green][cyan]{end_time-start_time}m[/cyan][/bold]"
                 )
-
-
-database_init()
