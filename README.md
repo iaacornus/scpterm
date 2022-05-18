@@ -4,6 +4,7 @@
 ![[Stars](https://img.shields.io/github/stars/iaacornus/scpterm)](https://img.shields.io/github/stars/iaacornus/scpterm)
 ![[Issues](https://img.shields.io/github/issues/iaacornus/scpterm)](https://img.shields.io/github/issues/iaacornus/scpterm)
 ![[code_quality](https://api.codiga.io/project/33613/score/svg)](https://api.codiga.io/project/33613/score/svg)
+[![Github All Releases](https://img.shields.io/github/release/iaacornus/scpterm?include_prereleases)](https://img.shields.io/github/release/iaacornus/scpterm?include_prereleases)
 
 Access the SCP Foundation database from your terminal.
 
