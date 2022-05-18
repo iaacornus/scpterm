@@ -4,7 +4,7 @@ from rich.console import Console
 
 from main import main
 from utils.database_init import database_init
-
+from tui.tui import main_ui
 
 def program_options():
     console = Console()
@@ -53,7 +53,7 @@ def program_options():
         elif args.decode:
             main(args.decode)
         else:
-            pass
+            main_ui()
     except ConnectionError: # add other exceptions later
         console.log(
             "[bold red][-] Connection error.[/bold red]"
