@@ -5,10 +5,11 @@ from datetime import datetime as time
 from random import uniform
 from time import sleep, process_time
 
-import cv2 as cv
 from rich.markdown import Markdown
 from rich.console import Console
 from bs4 import BeautifulSoup as bs
+
+from utils.scp_utils import Utils
 
 
 def data_search(scp_num):
@@ -36,6 +37,7 @@ def md_init(scp_num):
 
     start_time = process_time()
     console = Console()
+    utils = Utils()
     scp_check = data_search(scp_num)
 
     if not os.path.exists("database/proc.anomalies.d"):
@@ -119,6 +121,14 @@ def md_init(scp_num):
 
                 console.print(scp_md)
         else:
+            console.log(
+                f"[bold][red][-] [/red][cyan]SCP-{scp_num}[/cyan][red] does not exist.[/red]"
+            )
+            if "y" in console.input(
+                    f"[bold][:] Check in online database? [/bold]"
+                ).lower():
+                utils.scp_search(scp_num)
+
             return False
     else:
         console.print(scp_check)
@@ -126,3 +136,4 @@ def md_init(scp_num):
     console.log(
         f"[bold][?] File location: [cyan]database/proc.anomalies.d/scp_{scp_num}.md[/cyan]"
     )
+    return True
