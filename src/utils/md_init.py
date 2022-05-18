@@ -88,7 +88,7 @@ def md_init(scp_num):
                     ]
                     if fdesc.text.strip() not in ["\n", ""]
                 ][1]
-                reference = soup.find("p", {"id": "reference"}).text.strip().split("\n")[-1]
+                # reference = soup.find("p", {"id": "reference"}).text.strip().split("\n")[-1]
 
                 with open(
                         f"database/proc.anomalies.d/scp_{scp_num}.md", "w"
@@ -100,8 +100,8 @@ def md_init(scp_num):
                     proc_scp_info.write(f"{' '.join([items for items in scp_cp])}\n")
                     proc_scp_info.write(f"## SCP Description\n")
                     proc_scp_info.write(f"{scp_description}\n")
-                    proc_scp_info.write(f"### References\n")
-                    proc_scp_info.write(f"{reference}\n")
+                    # proc_scp_info.write(f"### References\n")
+                    # proc_scp_info.write(f"{reference}\n")
 
             end_time = process_time()
             console.log(
