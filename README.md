@@ -1,4 +1,8 @@
-# scpterm
+# Secure. Contain. Protect (SCP) Terminal
+
+![[License](https://img.shields.io/github/license/iaacornus/scpterm?style=flat-square)](https://img.shields.io/github/license/iaacornus/scpterm?style=flat-square)
+![[Stars](https://img.shields.io/github/stars/iaacornus/scpterm?style=flat-square)](https://img.shields.io/github/stars/iaacornus/scpterm?style=flat-square)
+![[Issues](https://img.shields.io/github/issues/iaacornus/scpterm?style=flat-square)](https://img.shields.io/github/issues/iaacornus/scpterm?style=flat-square)
 
 Access the SCP Foundation database from your terminal.
 
