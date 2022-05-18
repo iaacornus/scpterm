@@ -1,12 +1,10 @@
 import argparse
-from time import sleep
-from random import uniform
 
 from rich.console import Console
 
 from main import main
 from utils.database_init import database_init
-from tui.tui import main_ui
+
 
 def program_options():
     console = Console()

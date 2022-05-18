@@ -17,7 +17,8 @@ def data_search(scp_num):
     if os.path.isfile(f"database/proc.anomalies.d/scp_{scp_num}.md"):
         print("\033c") # clear the terminal
         console.log(
-            f"[bold green][+] Decoded successfully[/bold green] @[cyan]{time.now().strftime('%H:%M:%S')}[/cyan]."
+            f"[bold green][+] Decoded successfully[/bold green]"
+            + f"@[cyan]{time.now().strftime('%H:%M:%S')}[/cyan]."
         )
         with console.status(
                 f"[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
@@ -80,7 +81,7 @@ def md_init(scp_num):
                     if (cp_text.text.strip() not in ["\n", ""])
                 ]
 
-                scp_description = [
+                scp_description = [ # scp description
                     fdesc.text.strip() for fdesc in [
                         idesc for idesc in soup.find(
                             "div", {"class": "scp-description"}
@@ -93,19 +94,19 @@ def md_init(scp_num):
                 with open(
                         f"database/proc.anomalies.d/scp_{scp_num}.md", "w"
                     ) as proc_scp_info:
-                    proc_scp_info.write(f"# {scp_code} ({scp_name})\n")
-                    proc_scp_info.write(f"**Classification:** {scp_class}")
-                    proc_scp_info.write(f" ::_{' '.join([class_ for class_ in scp_classifications])}_\n")
-                    proc_scp_info.write(f"## Special Containment Procedures\n")
-                    proc_scp_info.write(f"{' '.join([items for items in scp_cp])}\n")
-                    proc_scp_info.write(f"## SCP Description\n")
-                    proc_scp_info.write(f"{scp_description}\n")
-                    # proc_scp_info.write(f"### References\n")
-                    # proc_scp_info.write(f"{reference}\n")
+                    proc_scp_info.write(
+                        f"# {scp_code} ({scp_name})\n**Classification:** {scp_class}"
+                        + f" ::_{' '.join([class_ for class_ in scp_classifications])}_\n"
+                        + f"## Special Containment Procedures\n"
+                        + f"{' '.join([items for items in scp_cp])}\n"
+                        + f"## SCP Description\n{scp_description}\n"
+                    )
 
             end_time = process_time()
             console.log(
-                f"[bold green][+] Decoded successfully[/bold green]:\n[cyan]{scp_code}: {scp_name} @{time.now().strftime('%H:%M:%S')}\nElapsed time: {end_time-start_time}[/cyan]."
+                f"[bold green][+] Decoded successfully[/bold green]:"
+                + f"\n[cyan]{scp_code}: {scp_name} @{time.now().strftime('%H:%M:%S')}"
+                + f"\nElapsed time: {end_time-start_time}[/cyan]."
             )
             with console.status(
                     f"[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
