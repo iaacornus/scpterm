@@ -4,7 +4,7 @@ Access the SCP Foundation database from your terminal.
 
 # Installation
 
-Since this is still in alpha stage, although it is not that buggy, you can download the source code and include `alias scp="python <parent_dir>/src/cli.py"`, in your prompt, until `setup.py` is still not available.
+Clone or download the project repository, either via GUI or `git clone --branch devel https://github.com/iaacornus/scpterm`, and build the project from source using `cd scpterm && python -m build`.
 
 # Usage
 
