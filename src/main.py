@@ -1,17 +1,13 @@
 import sys
-sys.path.append("..")
+import os
 
-from rich.console import Console
-from rich.markdown import Markdown
-
-from misc.colors import Colors
-
-console = Console()
-with open("README.md") as readme:
-    markdown = Markdown(readme.read())
-
-console.print(markdown)
+from utils.database_init import database_init
+from utils.md_init import md_init
 
 
-def main():
-    pass
+def main(scp_num):
+    sys.path.append("..")
+    if not os.path.isfile("database/fetch"):
+        database_init()
+
+    md_init(scp_num)
