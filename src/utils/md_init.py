@@ -95,8 +95,8 @@ def md_init(scp_num):
                         f"database/proc.anomalies.d/scp_{scp_num}.md", "w"
                     ) as proc_scp_info:
                     proc_scp_info.write(
-                        f"# {scp_code} ({scp_name})\n**Classification:** {scp_class}"
-                        + f" ::_{' '.join([class_ for class_ in scp_classifications])}_\n"
+                        f"# {scp_code} ({scp_name})\n**Classification:** {scp_class}\n"
+                        + f"\n_Further classification:_ {scp_classifications}\n"
                         + f"## Special Containment Procedures\n"
                         + f"{' '.join([items for items in scp_cp])}\n"
                         + f"## SCP Description\n{scp_description}\n"
@@ -113,15 +113,13 @@ def md_init(scp_num):
                     spinner="bouncingBar"
                 ):
                 sleep(uniform(0.1, 5.0))
+
                 with open(f"database/proc.anomalies.d/scp_{scp_num}.md") as scp_data:
                     scp_md =Markdown(scp_data.read())
-                console.print(scp_md)
 
+                console.print(scp_md)
         else:
-            console.log(
-                f"[bold][red][-] [/red][cyan]SCP-{scp_num}[/cyan][red] does not exist.[/red]"
-            )
-            raise SystemExit
+            return False
     else:
         console.print(scp_check)
 

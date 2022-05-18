@@ -10,7 +10,7 @@ from rich.console import Console
 
 
 def database_init(re_init=False):
-    sys.path.append("[..")
+    sys.path.append("..")
 
     console = Console()
     user_agent = UserAgent()
