@@ -4,10 +4,12 @@ from rich.console import Console
 
 from main import main
 from utils.database_init import database_init
-
+from utils.scp_utils import Utils
 
 def program_options():
     console = Console()
+    utils = Utils()
+
     description = """\
         scpterm, a view classified information of SCP Foundation's anomalies in your terminal.
     """
@@ -42,6 +44,12 @@ def program_options():
         help="View the information of anomaly.",
         action="store"
     )
+    parser.add_argument(
+        "-l",
+        "--list",
+        help="List all available anomaly.",
+        action="store_true"
+    )
 
     args = parser.parse_args()
 
@@ -52,6 +60,8 @@ def program_options():
             pass
         elif args.decode:
             main(args.decode)
+        elif args.list:
+            utils.scp_list()
         else:
             console.log(
                 "[bold red][-] Options not found.[/bold red]"
