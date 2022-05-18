@@ -15,7 +15,7 @@ def data_search(scp_num):
     console = Console()
 
     if os.path.isfile(f"database/proc.anomalies.d/scp_{scp_num}.md"):
-        print(chr(27) + "[2J") # clear the terminal
+        sys.stderr.write("\x1b[2J\x1b[H") # clear the terminal
         console.log(
             f"[bold green][+] Decoded successfully[/bold green] @[cyan]{time.now().strftime('%H:%M:%S')}[/cyan]."
         )
@@ -41,7 +41,7 @@ def md_init(scp_num):
 
     if not scp_check:
         if os.path.isfile(f"database/anomalies.list.d/scp_{scp_num}.info"):
-            print(chr(27) + "[2J") # clear the terminal
+            sys.stderr.write("\x1b[2J\x1b[H") # clear the terminal
             with console.status(
                     f"[bold turquoise4][=] Decoding the file ...[/bold turquoise4]",
                     spinner="bouncingBar"
