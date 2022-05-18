@@ -58,7 +58,7 @@ And view the information about selected anomaly with `scp -d <scp number>`, e.g.
 - [ ] Add image display support
 - [ ] Link related video to SCP
 - [ ] Add user setup/login before access
-- [ ] Add search function for unlisted SCP
+- [X] Add search function for unlisted SCP
 
 # License
 
