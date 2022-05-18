@@ -1,0 +1,76 @@
+import sys
+from time import process_time
+
+import requests
+from random_user_agent.user_agent import UserAgent
+from bs4 import BeautifulSoup as bs
+from rich.console import Console
+
+
+class Utils:
+    sys.path.append("..")
+
+    def __init__(self):
+        pass
+
+    def scp_search(self, scp_num):
+        console = Console()
+        user_agent = UserAgent()
+
+        start_time = process_time()
+        link = f"https://the-scp.foundation/object/scp-{scp_num}"
+
+        try:
+            with console.status(
+                    "[bold turquoise4][=] Checking access to database ...[/bold turquoise4]",
+                    spinner="bouncingBar"
+                ):
+                header = {"User-Agent": user_agent.get_random_user_agent()}
+                response = requests.get(link, headers=header)
+        except ConnectionError:
+            console.log(
+                "[bold red][-] Database is offline, cannot initiate.[/bold red]"
+            )
+        else:
+            with console.status(
+                    "[bold turquoise4][=] Fetching anomaly's information ...[/bold turquoise4]",
+                    spinner="bouncingBar"
+                ):
+                with open("database/anomalies.list", "a") as anomalies:
+                    anomalies.write(f"SCP-{scp_num}: {link}\n")
+
+                    console.log(
+                        f"[turquoise4]> Fetching data of [turquoise4][cyan]SCP-{scp_num}[/cyan]"
+                    )
+
+                    # fetch the html from the page
+                    new_header = {"User-Agent": user_agent.get_random_user_agent()}
+                    scp_data = requests.get(link, headers=new_header)
+                    soup = bs(scp_data.content, "html5lib")
+
+                    if scp_data.status_code in [i for i in range(200, 299)]:
+                        console.log(
+                            f"[turquoise4]> Metadata of [/turquoise4][cyan]SCP-{scp_num}[/cyan]"
+                            + "[turquoise4] fetched, writing to database ...[/turquoise4]"
+                        )
+                        with open(
+                                f"database/anomalies.list.d/scp_{scp_num}.info", "w"
+                            ) as scp_info:
+                            scp_info.write(soup.prettify())
+
+                        console.log(
+                            f"[green][+] Data of [/green][cyan]SCP-{scp_num}[/cyan]"
+                            + "[green] written successfully to database.[/green]"
+                        )
+                    else:
+                        console.log(
+                            f"[red][-] Skipping [/red][cyan]SCP-{scp_num}[/cyan]"
+                            + "[red], connection error.[/red]"
+                        )
+
+                end_time = process_time()
+                console.log(
+                    "[bold][green][+] Database initiated with total time of:[/green]"
+                    + f"[cyan]{end_time-start_time}m[/cyan][/bold]"
+                )
+
