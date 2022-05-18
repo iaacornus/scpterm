@@ -44,14 +44,14 @@ def database_init(re_init=False):
     if init:
         try:
             with console.status(
-                "[bold turquoise4][=] Checking access to database ...[/bold turquoise4]",
-                spinner="bouncingBar"
-            ):
+                    "[bold turquoise4][=] Checking access to database ...[/bold turquoise4]",
+                    spinner="bouncingBar"
+                ):
                 header = {"User-Agent": user_agent.get_random_user_agent()}
                 response = requests.get(link, headers=header)
         except ConnectionError:
             console.log(
-                "[bold red][-] Database is offline, cannot initiate[/bold red]"
+                "[bold red][-] Database is offline, cannot initiate.[/bold red]"
             )
         else:
             console.log(
@@ -64,7 +64,7 @@ def database_init(re_init=False):
 
             if not os.path.exists(f"database/anomalies.list.d"):
                 console.log(
-                    "[turquoise4]> Creating directory for anomalies data ...[/turquoise4]"
+                    "[turquoise4]> Creating directory for data of anomalies ...[/turquoise4]"
                 )
                 os.mkdir(f"database/anomalies.list.d")
 
@@ -84,7 +84,7 @@ def database_init(re_init=False):
                         anomalies.write(f"SCP-{scp_num}: {scp_link}\n")
 
                         console.log(
-                            f"[turquoise4]> Fetching [turquoise4][cyan]SCP-{scp_num}[/cyan]"
+                            f"[turquoise4]> Fetching data of [turquoise4][cyan]SCP-{scp_num}[/cyan]"
                         )
 
                         # fetch the html from the page
@@ -94,18 +94,18 @@ def database_init(re_init=False):
 
                         if scp_data.status_code in [i for i in range(200, 299)]:
                             console.log(
-                                f"[turquoise4]> Metadata of [/turquoise4][cyan]SCP-{scp_num}[/cyan][turquoise4] accessed, status code: {scp_data.status_code}, writing to database ...[/turquoise4]"
+                                f"[turquoise4]> Metadata of [/turquoise4][cyan]SCP-{scp_num}[/cyan][turquoise4] fetched, writing to database ...[/turquoise4]"
                             )
                             with open(
                                     f"database/anomalies.list.d/scp_{scp_num}.info", "w"
                                 ) as scp_info:
                                 scp_info.write(soup.prettify())
                             console.log(
-                                f"[green]> Data of [/green][cyan]SCP-{scp_num}[/cyan][green] written successfully to database.[/green]"
+                                f"[green][+] Data of [/green][cyan]SCP-{scp_num}[/cyan][green] written successfully to database.[/green]"
                             )
                         else:
                             console.log(
-                                f"[red]> Skipping [/red][cyan]SCP-{scp_num}[/cyan][red], connection error.[/red]"
+                                f"[red][-] Skipping [/red][cyan]SCP-{scp_num}[/cyan][red], connection error.[/red]"
                             )
 
                 end_time = process_time()

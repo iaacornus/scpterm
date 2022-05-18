@@ -43,7 +43,8 @@ def md_init(scp_num):
         if os.path.isfile(f"database/anomalies.list.d/scp_{scp_num}.info"):
             print(chr(27) + "[2J") # clear the terminal
             with console.status(
-                    f"[=] Decoding the file ...", spinner="bouncingBar"
+                    f"[bold turquoise4][=] Decoding the file ...[/bold turquoise4]",
+                    spinner="bouncingBar"
                 ):
                 with open(
                         f"database/anomalies.list.d/scp_{scp_num}.info", "r"
