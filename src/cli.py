@@ -1,4 +1,6 @@
 import argparse
+from time import sleep
+from random import uniform
 
 from rich.console import Console
 
@@ -53,6 +55,11 @@ def program_options():
         elif args.decode:
             main(args.decode)
         else:
+            with console.status(
+                    "[bold turquoise4][=] Accessing Foundation database.[/bold turquoise4]",
+                    spinner="bouncingBar"
+                ):
+                sleep(uniform(1.2, 4.7))
             main_ui()
     except ConnectionError: # add other exceptions later
         console.log(
