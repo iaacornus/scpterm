@@ -69,14 +69,14 @@ def program_options():
         elif args.list:
             utils.scp_list()
         elif args.version:
-            with open("software.info", "r") as info:
+            with open("software.info", "r", encoding="utf-8") as info:
                 software_info = info.readlines()
 
             for lines in software_info:
                 print(lines.replace("\n", ""))
 
             if "y" in console.input("[bold][:] Read license? [/bold]"):
-                with open("LICENSE", "r") as license:
+                with open("LICENSE", "r", encoding="utf-8") as license:
                     software_license = license.readlines()
 
                 for lines in software_license:

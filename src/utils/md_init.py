@@ -51,7 +51,8 @@ def md_init(scp_num):
                     spinner="bouncingBar"
                 ):
                 with open(
-                        f"database/anomalies.list.d/scp_{scp_num}.info", "r"
+                        f"database/anomalies.list.d/scp_{scp_num}.info",
+                        "r", encoding="utf-8"
                     ) as scp_info:
                     index = scp_info.read()
                     soup = bs(index, "html5lib")
@@ -91,13 +92,14 @@ def md_init(scp_num):
                 # reference = soup.find("p", {"id": "reference"}).text.strip().split("\n")[-1]
 
                 with open(
-                        f"database/proc.anomalies.d/scp_{scp_num}.md", "w"
+                        f"database/proc.anomalies.d/scp_{scp_num}.md",
+                        "w", encoding="utf-8"
                     ) as proc_scp_info:
                     proc_scp_info.write(
                         f"# {scp_code} ({scp_name})\n**Classification:** {scp_class}\n"
                         + f"\n_Further classification:_ {scp_classifications}\n"
                         + "## Special Containment Procedures\n"
-                        + f"{' '.join([items for items in scp_cp])}\n"
+                        + f"{' '.join(list(scp_cp))}\n"
                         + f"## SCP Description\n{scp_description}\n"
                     )
 

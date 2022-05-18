@@ -20,7 +20,7 @@ def database_init(re_init=False):
     link = "https://the-scp.foundation/object"
 
     if os.path.isfile("database/fetch"):
-        with open("database/fetch", "r") as data:
+        with open("database/fetch", "r", encoding="utf-8") as data:
             data_info = data.readlines()
 
         if re_init:
@@ -67,7 +67,7 @@ def database_init(re_init=False):
             )
             input()
 
-            with open("database/fetch" ,"w") as data:
+            with open("database/fetch" ,"w", encoding="utf-8") as data:
                 data.write(f"Fetched data:\n{time.now().strftime('%d:%m/%H:%M:%S')}")
 
             if not os.path.exists("database/anomalies.list.d"):
@@ -80,7 +80,7 @@ def database_init(re_init=False):
                 "[bold turquoise4][=] Fetching anomalies information ...[/bold turquoise4]",
                 spinner="bouncingBar"
             ):
-                with open("database/anomalies.list", "a") as anomalies:
+                with open("database/anomalies.list", "a", encoding="utf-8") as anomalies:
                     for i in range(1, 1000):
                         if len(f"{i}") == 1:
                             scp_num = f"00{i}"
@@ -106,7 +106,8 @@ def database_init(re_init=False):
                                 + "[turquoise4] fetched, writing to database ...[/turquoise4]"
                             )
                             with open(
-                                    f"database/anomalies.list.d/scp_{scp_num}.info", "w"
+                                    f"database/anomalies.list.d/scp_{scp_num}.info",
+                                    "w", encoding="utf-8"
                                 ) as scp_info:
                                 scp_info.write(soup.prettify())
 

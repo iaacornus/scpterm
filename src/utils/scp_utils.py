@@ -40,7 +40,7 @@ class Utils:
                     "[bold turquoise4][=] Fetching anomaly's information ...[/bold turquoise4]",
                     spinner="bouncingBar"
                 ):
-                with open("database/anomalies.list", "a") as anomalies:
+                with open("database/anomalies.list", "a", encoding="utf-8") as anomalies:
                     anomalies.write(f"SCP-{scp_num}: {link}\n")
 
                     self.console.log(
@@ -58,7 +58,8 @@ class Utils:
                             + "[turquoise4] fetched, writing to database ...[/turquoise4]"
                         )
                         with open(
-                                f"database/anomalies.list.d/scp_{scp_num}.info", "w"
+                                f"database/anomalies.list.d/scp_{scp_num}.info",
+                                "w", encoding="utf-8"
                             ) as scp_info:
                             scp_info.write(soup.prettify())
 
@@ -80,7 +81,7 @@ class Utils:
 
     def scp_list(self):
         if os.path.isfile("database/anomalies.list"):
-            with open("database/anomalies.list", "r") as scp_list:
+            with open("database/anomalies.list", "r", encoding="utf-8") as scp_list:
                 entries = scp_list.readlines()
 
         with self.console.status(
