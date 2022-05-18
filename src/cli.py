@@ -55,12 +55,10 @@ def program_options():
         elif args.decode:
             main(args.decode)
         else:
-            with console.status(
-                    "[bold turquoise4][=] Accessing Foundation database.[/bold turquoise4]",
-                    spinner="bouncingBar"
-                ):
-                sleep(uniform(1.2, 4.7))
-            main_ui()
+            console.log(
+                "[bold red][-] Options not found.[/bold red]"
+            )
+            raise SystemExit
     except ConnectionError: # add other exceptions later
         console.log(
             "[bold red][-] Connection error.[/bold red]"
