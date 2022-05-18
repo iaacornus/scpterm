@@ -10,9 +10,10 @@ There are signs while tasks are running within the terminal:
 1. `[=]`, denotes a happening process, with torqiouse color .
 2. `[-]`, an error occurred, colored red.
 3. `[+]`, task completed successfully, colored green.
-4. `[?]`, yes or no input, whether to proceed or not, color varies on severity, refer to color codes below.
-5. `[*]`, more complicated user input required, color varies on severity, refer to color codes below.
-6. `>`, sub process, colored torqiouse, with the important subject matter colored as cyan, if there is any.
+4. `[:]`, yes or no input, whether to proceed or not, color varies on severity, refer to color codes below.
+5. `[^]`, a confirmation input.
+6. `[*]`, more complicated user input required, color varies on severity, refer to color codes below.
+7. `>`, sub process, colored torqiouse, with the important subject matter colored as cyan, if there is any.
 
 ## Color codes
 
