@@ -11,7 +11,6 @@ from tui.tui import main_ui
 def main(scp_num):
     sys.path.append("..")
 
-    console = Console()
     main_ui()
 
     if not os.path.isfile("database/fetch"):

@@ -32,7 +32,7 @@ def main_ui():
         except KeyboardInterrupt:
             print("\033c")
     else:
-        with open(f"img/scp_logo.txt") as logo_ascii:
+        with open("img/scp_logo.txt") as logo_ascii:
             logo = logo_ascii.read()
 
         time = 0
