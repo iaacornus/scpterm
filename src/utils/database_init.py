@@ -113,4 +113,3 @@ def database_init(re_init=False):
                     f"[bold][green][+] Database initiated with total time of:[/green][cyan]{end_time-start_time}m[/cyan][/bold]"
                 )
 
-database_init()
