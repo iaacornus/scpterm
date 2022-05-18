@@ -2,6 +2,7 @@ import sys
 sys.path.append("..")
 
 import os
+from time import process_time
 from datetime import datetime as time
 
 import requests
@@ -12,6 +13,8 @@ from rich.console import Console
 def database_init():
     console = Console()
     user_agent = UserAgent()
+
+    start_time = process_time()
     link = "https://the-scp.foundation/object"
 
     if os.path.isfile("database/fetch"):
@@ -80,10 +83,18 @@ def database_init():
                                     f"database/anomalies.list.d/scp_{scp_num}.info", "w"
                                 ) as scp_info:
                                 scp_info.write(soup.prettify())
+                            console.log(
+                                f"[green]> Data of [/green][cyan]SCP-{scp_num}[/cyan][green] written successfully to database.[/green]"
+                            )
                         else:
                             console.log(
                                 f"[red]> Skipping [/red][cyan]SCP-{scp_num}[/cyan][red], connection error.[/red]"
                             )
+
+                end_time = process_time()
+                console.log(
+                    f"[bold][green][+] Database initiated with total time of:[/green][cyan]{end_time-start_time}[/cyan][/bold]"
+                )
 
 
 database_init()
