@@ -4,4 +4,3 @@ pillow
 requests
 random_user_agent
 html5lib
-pytermgui
