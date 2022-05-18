@@ -15,12 +15,13 @@ def data_search(scp_num):
     console = Console()
 
     if os.path.isfile(f"database/proc.anomalies.d/scp_{scp_num}.md"):
-        sys.stderr.write("\x1b[2J\x1b[H") # clear the terminal
+        print("\033c") # clear the terminal
         console.log(
             f"[bold green][+] Decoded successfully[/bold green] @[cyan]{time.now().strftime('%H:%M:%S')}[/cyan]."
         )
         with console.status(
-                f"[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]"
+                f"[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
+                spinner="bouncingBar"
             ):
             sleep(uniform(0.1, 5.0))
             with open(f"database/proc.anomalies.d/scp_{scp_num}.md") as scp_data:
@@ -41,7 +42,7 @@ def md_init(scp_num):
 
     if not scp_check:
         if os.path.isfile(f"database/anomalies.list.d/scp_{scp_num}.info"):
-            sys.stderr.write("\x1b[2J\x1b[H") # clear the terminal
+            print("\033c") # clear the terminal
             with console.status(
                     f"[bold turquoise4][=] Decoding the file ...[/bold turquoise4]",
                     spinner="bouncingBar"
@@ -107,7 +108,8 @@ def md_init(scp_num):
                 f"[bold green][+] Decoded successfully[/bold green]:\n[cyan]{scp_code}: {scp_name} @{time.now().strftime('%H:%M:%S')}\nElapsed time: {end_time-start_time}[/cyan]."
             )
             with console.status(
-                    f"[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]"
+                    f"[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
+                    spinner="bouncingBar"
                 ):
                 sleep(uniform(0.1, 5.0))
                 with open(f"database/proc.anomalies.d/scp_{scp_num}.md") as scp_data:
