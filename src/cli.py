@@ -50,6 +50,12 @@ def program_options():
         help="List all available anomaly.",
         action="store_true"
     )
+    parser.add_argument(
+        "-v",
+        "--version",
+        help="Show the version number of the software as well as other information",
+        action="store_true"
+    )
 
     args = parser.parse_args()
 
@@ -62,6 +68,19 @@ def program_options():
             main(args.decode)
         elif args.list:
             utils.scp_list()
+        elif args.version:
+            with open("software.info", "r") as info:
+                software_info = info.readlines()
+
+            for lines in software_info:
+                print(lines.replace("\n", ""))
+
+            if "y" in console.input("[bold][:] Read license? [/bold]"):
+                with open("LICENSE", "r") as license:
+                    software_license = license.readlines()
+
+                for lines in software_license:
+                    print(lines.replace("\n", ""))
         else:
             console.log(
                 "[bold red][-] Options not found.[/bold red]"
