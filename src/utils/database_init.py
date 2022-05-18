@@ -14,31 +14,34 @@ def database_init(re_init=False):
 
     console = Console()
     user_agent = UserAgent()
+    init = True
 
     start_time = process_time()
     link = "https://the-scp.foundation/object"
 
-    with open("database/fetch", "r") as data:
-        data_info = data.readlines()
-
-    if re_init:
-        if "y" in console.input(
-                f"[bold][:] Database already exists (last fetch:[cyan]{data_info[1]}[/cyan]). Re-initiate? [/bold]"
-            ).lower():
-            for root, dirs, files in os.walk("database"):
-                for file in files:
-                    os.remove(os.path.join(root, file))
-
-            console.log("[bold green][+] Database removed, re-initiating ...[/bold green]")
-        else:
-            console.log("[bold red][-] Process aborted.[/bold red]")
-            raise SystemExit
-
     if os.path.isfile("database/fetch"):
-        console.log(
-            f"[bold][?] Database already exists (last fetch:[cyan]{data_info[1]}[/cyan]).[/bold]"
-        )
-    else:
+        with open("database/fetch", "r") as data:
+            data_info = data.readlines()
+
+        if re_init:
+            if "y" in console.input(
+                    f"[bold][:] Database already exists (last fetch:[cyan]{data_info[1]}[/cyan]). Re-initiate? [/bold]"
+                ).lower():
+                for root, dirs, files in os.walk("database"):
+                    for file in files:
+                        os.remove(os.path.join(root, file))
+
+                console.log("[bold green][+] Database removed, re-initiating ...[/bold green]")
+            else:
+                console.log("[bold red][-] Process aborted.[/bold red]")
+                raise SystemExit
+        else:
+            console.log(
+                f"[bold][?] Database already exists (last fetch:[cyan]{data_info[1]}[/cyan]).[/bold]"
+            )
+            init = False
+
+    if init:
         try:
             with console.status(
                 "[bold turquoise4][=] Checking access to database ...[/bold turquoise4]",
@@ -109,3 +112,5 @@ def database_init(re_init=False):
                 console.log(
                     f"[bold][green][+] Database initiated with total time of:[/green][cyan]{end_time-start_time}m[/cyan][/bold]"
                 )
+
+database_init()
