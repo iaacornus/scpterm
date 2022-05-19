@@ -31,12 +31,6 @@ def program_options():
         help="Do again the previous task",
         action="store_true"
     )
-    """parser.add_argument(
-        "-fetch",
-        "--fetch",
-        help="Fetch new data from the database.",
-        action="store_true"
-    )"""
     # view the information of anomaly
     parser.add_argument(
         "-d",
@@ -68,8 +62,6 @@ def program_options():
     try:
         if args.initiate:
             database_init(args.re)
-        # elif args.fetch:
-        #    pass
         elif args.decode:
             main(args.decode)
         elif args.list:
