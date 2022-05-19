@@ -15,6 +15,17 @@ class Utils:
     def __init__(self):
         pass
 
+    def check_status(self, link, user_agent):
+        with self.console.status(
+                "[bold turquoise4][=] Checking access to database ...[/bold turquoise4]",
+                spinner="bouncingBar"
+            ):
+            header = {"User-Agent": user_agent}
+            response = requests.get(link, headers=header)
+
+            if response.status_code not in list(range(200, 299)):
+                raise ConnectionError
+
     def scp_search(self, scp_num):
         user_agent = UserAgent()
 
@@ -22,15 +33,7 @@ class Utils:
         link = f"https://the-scp.foundation/object/scp-{scp_num}"
 
         try:
-            with self.console.status(
-                    "[bold turquoise4][=] Checking access to database ...[/bold turquoise4]",
-                    spinner="bouncingBar"
-                ):
-                header = {"User-Agent": user_agent.get_random_user_agent()}
-                response = requests.get(link, headers=header)
-
-                if response.status_code not in list(range(200, 299)):
-                    raise ConnectionError
+            self.check_status(link, user_agent.get_random_user_agent())
         except ConnectionError:
             self.console.log(
                 "[bold red][-] Database is offline, cannot initiate.[/bold red]"

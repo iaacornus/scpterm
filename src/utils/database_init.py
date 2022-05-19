@@ -8,10 +8,13 @@ from bs4 import BeautifulSoup as bs
 from random_user_agent.user_agent import UserAgent
 from rich.console import Console
 
+from scp_utils import Utils
+
 
 def database_init(re_init=False):
     sys.path.append("..")
 
+    utils = Utils()
     console = Console()
     user_agent = UserAgent()
     init = True
@@ -47,15 +50,7 @@ def database_init(re_init=False):
 
     if init:
         try:
-            with console.status(
-                    "[bold turquoise4][=] Checking access to database ...[/bold turquoise4]",
-                    spinner="bouncingBar"
-                ):
-                header = {"User-Agent": user_agent.get_random_user_agent()}
-                response = requests.get(link, headers=header)
-
-                if response.status_code not in list(range(200, 299)):
-                    raise ConnectionError
+            utils.check_status(link, user_agent.get_random_user_agent())
         except ConnectionError:
             console.log(
                 "[bold red][-] Database is offline, cannot initiate.[/bold red]"
