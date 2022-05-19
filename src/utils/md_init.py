@@ -33,7 +33,7 @@ def md_init(scp_num):
                 )
                 break
             if "y" in console.input(
-                    f"[bold][:] Check SCP-{scp_num} in online database? [/bold]"
+                    f"[bold][:] Check [cyan]SCP-{scp_num}[/cyan] in online database? [/bold]"
                 ).lower():
                 utils.scp_search(scp_num)
                 check, soup = utils.fetch_soup(scp_num)

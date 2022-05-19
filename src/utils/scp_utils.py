@@ -123,13 +123,14 @@ class Utils:
                     )
                     break
                 if "y" in self.console.input(
-                        f"[bold][:] Check SCP-{scp_num} in online database? [/bold]"
+                        f"[bold][:] Check [cyan]SCP-{scp_num}[/cyan] in online database? [/bold]"
                     ).lower():
                     self.scp_search(scp_num)
                     check, soup = self.fetch_soup(scp_num)
 
             with self.console.status(
-                "[bold turquoise4][=] Fetching img of the anomaly ...[/bold turquoise4]"
+                "[bold turquoise4][=] Fetching img of the anomaly ...[/bold turquoise4]",
+                spinner="bouncingBar"
             ):
                 if not os.path.exists("database/scp_imgs"):
                     os.mkdir("database/scp_imgs")
@@ -151,6 +152,8 @@ class Utils:
                     else:
                         return True, f"database/scp_imgs/{img_name}"
 
+        return False, None
+
     def view_img(self, scp_num):
         (check, img_dir), trial = self.check_img(scp_num), 0
 
@@ -171,11 +174,12 @@ class Utils:
                     return True
             else:
                 check, img_dir = self.fetch_img(scp_num)
-
-        self.console.log(
-            f"[bold][red][-] Cannot fetch the image of [/red][cyan]SCP-{scp_num}[cyan][/bold]"
-        )
-
+                if not check:
+                    self.console.log(
+                        f"[bold][red][-] Cannot fetch the image of [/red] [cyan]SCP-{scp_num}"
+                        + "[/cyan],[red] seems there is no image available.[/bold]"
+                    )
+                    break
 
     def view_md(self, scp_num):
         with self.console.status(
@@ -194,7 +198,8 @@ class Utils:
                 entries = scp_list.readlines()
 
         with self.console.status(
-                "[bold turquoise4][=] Listing all entries ...[/bold turquoise4]"
+                "[bold turquoise4][=] Listing all entries ...[/bold turquoise4]",
+                spinner="bouncingBar"
             ):
             for entry in entries:
                 info = entry.split(":")
@@ -203,8 +208,8 @@ class Utils:
                     f"[turquoise4]> [/turquoise4][cyan]{info[0]}[/cyan]@[cyan]{link}[/cyan]"
                 )
         self.console.log(
-            f"[bold green][+] There are total of {len(entries)}"
+            f"[bold green][+] There are total of {len(entries)-1}"
             + " anomalies in the local database.[/bold green]\n"
-            + "[bold][?] There anomalies are located at "
+            + "[bold][?] The anomalies are located at "
             + "[cyan]database/anomalies.list/:database/proc.anomalies.d/[/cyan][/bold]"
         )
