@@ -53,7 +53,13 @@ def program_options():
     parser.add_argument(
         "-v",
         "--version",
-        help="Show the version number of the software as well as other information",
+        help="Show the version number of the software as well as other information.",
+        action="store_true"
+    )
+    parser.add_argument(
+        "-I",
+        "--image",
+        help="Display the image of the anomaly.",
         action="store_true"
     )
 
