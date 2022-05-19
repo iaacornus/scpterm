@@ -18,10 +18,7 @@ def md_init(scp_num):
 
     start_time = process_time()
 
-    if os.path.isfile(f"database/proc.anomalies.d/scp_{scp_num}.md"):
-        print("\033c") # clear the terminal
-        utils.view_md(scp_num)
-    else:
+    if not os.path.isfile(f"database/proc.anomalies.d/scp_{scp_num}.md"):
         if not os.path.exists("database/proc.anomalies.d"):
             os.mkdir("database/proc.anomalies.d")
 
@@ -96,8 +93,10 @@ def md_init(scp_num):
             + f"\n[cyan]{scp_code}: {scp_name} @{time.now().strftime('%H:%M:%S')}"
             + f"\nElapsed time: {end_time-start_time}[/cyan]."
         )
-        print("\033c") # clear the terminal
-        utils.view_md(scp_num)
+
+    print("\033c") # clear the terminal
+    utils.view_md(scp_num)
+    utils.view_img(scp_num)
 
     console.log(
         f"[bold][?] File location: [cyan]database/proc.anomalies.d/scp_{scp_num}.md[/cyan]"

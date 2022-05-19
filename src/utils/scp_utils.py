@@ -175,8 +175,6 @@ class Utils:
                 check, img_dir = self.fetch_img(scp_num)
                 continue
 
-        return False
-
     def view_md(self, scp_num):
         with self.console.status(
             "[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
