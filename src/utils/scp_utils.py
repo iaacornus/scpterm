@@ -135,7 +135,9 @@ class Utils:
                     os.mkdir("database/scp_imgs")
 
                 scp_img_metadata = soup.find("img", {"class": "scp-image"})
-                scp_img = str(scp_img_metadata).split(" ")[-1][5:-3]
+                scp_img = str(scp_img_metadata).rsplit(" ", maxsplit=1)[-1]
+                # scp_img = str(scp_img_metadata).split(" ")[-1][5:-3]
+
 
                 if scp_img.startswith("https://"):
                     try:
