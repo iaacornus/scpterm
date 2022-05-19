@@ -53,8 +53,14 @@ def program_options():
     parser.add_argument(
         "-v",
         "--version",
-        help="Show the version number of the software as well as other information",
+        help="Show the version number of the software as well as other information.",
         action="store_true"
+    )
+    parser.add_argument(
+        "-I",
+        "--image",
+        help="Display the image of the anomaly.",
+        action="store"
     )
 
     args = parser.parse_args()
@@ -68,6 +74,8 @@ def program_options():
             main(args.decode)
         elif args.list:
             utils.scp_list()
+        elif args.image:
+            utils.view_img(args.image)
         elif args.version:
             with open("software.info", "r", encoding="utf-8") as info:
                 software_info = info.readlines()

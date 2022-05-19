@@ -42,11 +42,12 @@ setup(
     },
     python_requires="<=3.10.4",
     install_requires=[
-        "requests",
-        "rich",
-        "bs4",
-        "random_user_agent",
-        "html5lib"
+        "requests<=2.27.1",
+        "rich<=12.4.1",
+        "bs4<=0.0.1",
+        "random_user_agent<=1.0.1",
+        "html5lib<=1.1",
+        "opencv-python<=4.5.5.64"
     ],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",

@@ -8,16 +8,19 @@ from bs4 import BeautifulSoup as bs
 from random_user_agent.user_agent import UserAgent
 from rich.console import Console
 
+from utils.scp_utils import Utils
+
 
 def database_init(re_init=False):
     sys.path.append("..")
 
+    utils = Utils()
     console = Console()
     user_agent = UserAgent()
     init = True
 
     start_time = process_time()
-    link = "https://the-scp.foundation/object"
+    link = "https://the-scp.foundation/"
 
     if os.path.isfile("database/fetch"):
         with open("database/fetch", "r", encoding="utf-8") as data:
@@ -47,15 +50,7 @@ def database_init(re_init=False):
 
     if init:
         try:
-            with console.status(
-                    "[bold turquoise4][=] Checking access to database ...[/bold turquoise4]",
-                    spinner="bouncingBar"
-                ):
-                header = {"User-Agent": user_agent.get_random_user_agent()}
-                response = requests.get(link, headers=header)
-
-                if response.status_code not in list(range(200, 299)):
-                    raise ConnectionError
+            utils.check_status(link, user_agent.get_random_user_agent())
         except ConnectionError:
             console.log(
                 "[bold red][-] Database is offline, cannot initiate.[/bold red]"
@@ -88,7 +83,7 @@ def database_init(re_init=False):
                             scp_num = f"0{i}"
                         elif len(f"{i}") == 3:
                             scp_num = f"{i}"
-                        scp_link = f"{link}/scp-{scp_num}"
+                        scp_link = f"{link}/object/scp-{scp_num}"
                         anomalies.write(f"SCP-{scp_num}: {scp_link}\n")
 
                         console.log(
