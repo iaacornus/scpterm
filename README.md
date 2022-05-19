@@ -1,10 +1,16 @@
-# scpterm
+# Secure. Contain. Protect (SCP) Terminal
+
+![[License](https://img.shields.io/github/license/iaacornus/scpterm)](https://img.shields.io/github/license/iaacornus/scpterm)
+![[Stars](https://img.shields.io/github/stars/iaacornus/scpterm)](https://img.shields.io/github/stars/iaacornus/scpterm)
+![[Issues](https://img.shields.io/github/issues/iaacornus/scpterm)](https://img.shields.io/github/issues/iaacornus/scpterm)
+![[code_quality](https://api.codiga.io/project/33613/score/svg)](https://api.codiga.io/project/33613/score/svg)
+[![Github All Releases](https://img.shields.io/github/release/iaacornus/scpterm?include_prereleases)](https://img.shields.io/github/release/iaacornus/scpterm?include_prereleases)
 
 Access the SCP Foundation database from your terminal.
 
 # Installation
 
-Clone or download the project repository, either via GUI or `git clone --branch devel https://github.com/iaacornus/scpterm`, and build the project from source using `cd scpterm && python -m build`.
+Clone or download the project repository, either via GUI or `git clone --branch <prefered branch> https://github.com/iaacornus/scpterm`, and build the project from source using `cd scpterm && python -m build`.
 
 # Usage
 
@@ -45,6 +51,15 @@ $ scp -l
 ```
 
 And view the information about selected anomaly with `scp -d <scp number>`, e.g. `scp -d 002`:
+
+# Todo
+
+- [ ] Update function to fetch updates for repository.
+- [ ] Improve the information display system
+- [ ] Add image display support
+- [ ] Link related video to SCP
+- [ ] Add user setup/login before access
+- [ ] Add search function for unlisted SCP
 
 # License
 

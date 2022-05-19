@@ -4,8 +4,8 @@ from time import process_time
 from datetime import datetime as time
 
 import requests
-from random_user_agent.user_agent import UserAgent
 from bs4 import BeautifulSoup as bs
+from random_user_agent.user_agent import UserAgent
 from rich.console import Console
 
 
@@ -20,15 +20,15 @@ def database_init(re_init=False):
     link = "https://the-scp.foundation/object"
 
     if os.path.isfile("database/fetch"):
-        with open("database/fetch", "r") as data:
+        with open("database/fetch", "r", encoding="utf-8") as data:
             data_info = data.readlines()
 
         if re_init:
             if "y" in console.input(
-                    f"[bold][:] Database already exists (last fetch:"
+                    "[bold][:] Database already exists (last fetch:"
                     + f"[cyan]{data_info[1]}[/cyan]). Re-initiate? [/bold]"
                 ).lower():
-                for root, dirs, files in os.walk("database"):
+                for root, _, files in os.walk("database"):
                     for file in files:
                         os.remove(os.path.join(root, file))
 
@@ -40,7 +40,7 @@ def database_init(re_init=False):
                 raise SystemExit
         else:
             console.log(
-                f"[bold][?] Database already exists (last fetch:"
+                "[bold][?] Database already exists (last fetch:"
                 + f"[cyan]{data_info[1]}[/cyan]).[/bold]"
             )
             init = False
@@ -53,6 +53,9 @@ def database_init(re_init=False):
                 ):
                 header = {"User-Agent": user_agent.get_random_user_agent()}
                 response = requests.get(link, headers=header)
+
+                if response.status_code not in list(range(200, 299)):
+                    raise ConnectionError
         except ConnectionError:
             console.log(
                 "[bold red][-] Database is offline, cannot initiate.[/bold red]"
@@ -64,20 +67,20 @@ def database_init(re_init=False):
             )
             input()
 
-            with open("database/fetch" ,"w") as data:
+            with open("database/fetch" ,"w", encoding="utf-8") as data:
                 data.write(f"Fetched data:\n{time.now().strftime('%d:%m/%H:%M:%S')}")
 
-            if not os.path.exists(f"database/anomalies.list.d"):
+            if not os.path.exists("database/anomalies.list.d"):
                 console.log(
                     "[turquoise4]> Creating directory for data of anomalies ...[/turquoise4]"
                 )
-                os.mkdir(f"database/anomalies.list.d")
+                os.mkdir("database/anomalies.list.d")
 
             with console.status(
                 "[bold turquoise4][=] Fetching anomalies information ...[/bold turquoise4]",
                 spinner="bouncingBar"
             ):
-                with open("database/anomalies.list", "a") as anomalies:
+                with open("database/anomalies.list", "a", encoding="utf-8") as anomalies:
                     for i in range(1, 1000):
                         if len(f"{i}") == 1:
                             scp_num = f"00{i}"
@@ -89,7 +92,7 @@ def database_init(re_init=False):
                         anomalies.write(f"SCP-{scp_num}: {scp_link}\n")
 
                         console.log(
-                            f"[turquoise4]> Fetching data of [turquoise4][cyan]SCP-{scp_num}[/cyan]"
+                            f"[turquoise4]> Fetching data: [turquoise4][cyan]SCP-{scp_num}[/cyan]"
                         )
 
                         # fetch the html from the page
@@ -97,13 +100,14 @@ def database_init(re_init=False):
                         scp_data = requests.get(scp_link, headers=new_header)
                         soup = bs(scp_data.content, "html5lib")
 
-                        if scp_data.status_code in [i for i in range(200, 299)]:
+                        if scp_data.status_code in list(range(200, 299)):
                             console.log(
-                                f"[turquoise4]> Metadata of [/turquoise4][cyan]SCP-{scp_num}[/cyan]"
+                                f"[turquoise4]> Metadata: [/turquoise4][cyan]SCP-{scp_num}[/cyan]"
                                 + "[turquoise4] fetched, writing to database ...[/turquoise4]"
                             )
                             with open(
-                                    f"database/anomalies.list.d/scp_{scp_num}.info", "w"
+                                    f"database/anomalies.list.d/scp_{scp_num}.info",
+                                    "w", encoding="utf-8"
                                 ) as scp_info:
                                 scp_info.write(soup.prettify())
 
