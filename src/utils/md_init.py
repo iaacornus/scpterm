@@ -25,7 +25,7 @@ def data_search(scp_num):
                 "[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
                 spinner="bouncingBar"
             ):
-            sleep(uniform(0.1, 5.0))
+            sleep(uniform(0.1, 5.7))
             with open(f"database/proc.anomalies.d/scp_{scp_num}.md") as scp_data:
                 return Markdown(scp_data.read())
     else:

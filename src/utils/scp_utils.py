@@ -21,8 +21,7 @@ class Utils:
                 "[bold turquoise4][=] Checking access to database ...[/bold turquoise4]",
                 spinner="bouncingBar"
             ):
-            header = {"User-Agent": user_agent}
-            response = requests.get(link, headers=header)
+            response = requests.get(link, headers={"User-Agent": user_agent})
 
             if response.status_code not in list(range(200, 299)):
                 raise ConnectionError

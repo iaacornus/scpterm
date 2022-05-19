@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup as bs
 from random_user_agent.user_agent import UserAgent
 from rich.console import Console
 
-from scp_utils import Utils
+from utils.scp_utils import Utils
 
 
 def database_init(re_init=False):
@@ -20,7 +20,7 @@ def database_init(re_init=False):
     init = True
 
     start_time = process_time()
-    link = "https://the-scp.foundation/object"
+    link = "https://the-scp.foundation/"
 
     if os.path.isfile("database/fetch"):
         with open("database/fetch", "r", encoding="utf-8") as data:
@@ -83,7 +83,7 @@ def database_init(re_init=False):
                             scp_num = f"0{i}"
                         elif len(f"{i}") == 3:
                             scp_num = f"{i}"
-                        scp_link = f"{link}/scp-{scp_num}"
+                        scp_link = f"{link}/object/scp-{scp_num}"
                         anomalies.write(f"SCP-{scp_num}: {scp_link}\n")
 
                         console.log(

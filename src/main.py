@@ -1,8 +1,6 @@
 import sys
 import os
 
-from rich.console import Console
-
 from utils.database_init import database_init
 from utils.md_init import md_init
 from tui.tui import main_ui
