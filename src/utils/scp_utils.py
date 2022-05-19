@@ -3,8 +3,8 @@ import sys
 from time import process_time, sleep
 from random import uniform
 
-import cv2 as cv
 import requests
+import cv2 as cv
 from bs4 import BeautifulSoup as bs
 from random_user_agent.user_agent import UserAgent
 from rich.console import Console
@@ -165,7 +165,7 @@ class Utils:
                     cv.destroyAllWindows()
                 except FileNotFoundError:
                     self.console.log(
-                        "[bold red][-] The image requested does not exist in database, skipping.[/bold red]"
+                        "[bold red][-] The image requested does not exist in database.[/bold red]"
                     )
                 else:
                     return True

@@ -25,12 +25,27 @@ def md_init(scp_num):
         if not os.path.exists("database/proc.anomalies.d"):
             os.mkdir("database/proc.anomalies.d")
 
+        (check, soup), trial = utils.fetch_soup(scp_num), 0
+        while not check:
+            utils.console.log(
+                f"[red]> Failed attempt, try: {trial}[/red]"
+            )
+            if trial == 2:
+                console.log(
+                    "[bold red][-] Too many failed attempts, aborting.[/bold red]"
+                )
+                break
+            if "y" in console.input(
+                    f"[bold][:] Check SCP-{scp_num} in online database? [/bold]"
+                ).lower():
+                utils.scp_search(scp_num)
+                check, soup = utils.fetch_soup(scp_num)
+
 
         with console.status(
                 "[bold turquoise4][=] Decoding the file ...[/bold turquoise4]",
                 spinner="bouncingBar"
             ):
-
             # begin extraction of data
             scp_code = f"SCP-{scp_num}"
             scp_name = soup.find("h2", {"class": "scp-nickname"}).text.strip()
