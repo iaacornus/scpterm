@@ -76,8 +76,8 @@ def program_options():
                 print(lines.replace("\n", ""))
 
             if "y" in console.input("[bold][:] Read license? [/bold]"):
-                with open("LICENSE", "r", encoding="utf-8") as license:
-                    software_license = license.readlines()
+                with open("LICENSE", "r", encoding="utf-8") as _license_:
+                    software_license = _license_.readlines()
 
                 for lines in software_license:
                     print(lines.replace("\n", ""))

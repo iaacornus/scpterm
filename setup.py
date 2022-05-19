@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-with open("README.md", "r") as readme:
+with open("README.md", "r", encoding="utf-8") as readme:
     description = readme.read()
 
 setup(
@@ -36,7 +36,6 @@ setup(
             "tui"
         ]
     ),
-
     package_data={
         "program_help": ["program_help/wiki.md"],
         "img": ["img/scp_logo.txt"]
