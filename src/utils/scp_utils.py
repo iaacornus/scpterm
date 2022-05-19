@@ -1,12 +1,15 @@
+import multiprocessing as mps
 import os
 import sys
-from time import process_time
+from time import process_time, sleep
+from random import uniform
 
 import cv2 as cv
 import requests
 from bs4 import BeautifulSoup as bs
 from random_user_agent.user_agent import UserAgent
 from rich.console import Console
+from rich.markdown import Markdown
 
 
 class Utils:
@@ -26,34 +29,46 @@ class Utils:
             if response.status_code not in list(range(200, 299)):
                 raise ConnectionError
 
+    def check_img(self, scp_num):
+        for type_ in ["jpg", "png"]:
+            img_path = f"database/scp_imgs/scp_{scp_num}_img.{type_}"
+            if os.path.exists(img_path):
+                return True, img_path
+
+        return False, None
+
     def fetch_img(self, soup, scp_num):
-        with self.console.status(
-            "[bold turquoise4][=] Fetching img of the anomaly ...[/bold turquoise4]"
-        ):
-            if not os.path.exists("database/scp_imgs"):
-                os.mkdir("database/scp_imgs")
+        scp_img_check, scp_img_path = self.check_img(scp_num)
 
-            scp_img = soup.find("img", {"class": "scp-image"}).text.strip()
-            if scp_img.startswith("https://"):
-                try:
-                    img = requests.get(scp_img)
-                    if scp_img[-3] not in ["jpg", "png"]:
-                        raise ConnectionError
+        if scp_img_check:
+            return True, scp_img_path
+        else:
+            with self.console.status(
+                "[bold turquoise4][=] Fetching img of the anomaly ...[/bold turquoise4]"
+            ):
+                if not os.path.exists("database/scp_imgs"):
+                    os.mkdir("database/scp_imgs")
+                scp_img = soup.find("img", {"class": "scp-image"}).text.strip()
 
-                    img_name = f"scp_{scp_num}_img.{scp_img[-3]}"
+                if scp_img.startswith("https://"):
+                    try:
+                        img = requests.get(scp_img)
+                        if scp_img[-3] not in ["jpg", "png"]:
+                            raise ConnectionError
 
-                    with open(
-                            f"database/scp_imgs/{img_name}", "wb", encoding="utf-8"
-                        ) as img_data:
-                        img_data.write(img.content)
-                except ConnectionError:
-                    self.console.log(
-                        "[bold red][-] Database is offline, cannot fetch files.[/bold red]"
-                    )
-                else:
-                    return img_name
+                        img_name = f"scp_{scp_num}_img.{scp_img[-3]}"
 
-                return False
+                        with open(
+                                f"database/scp_imgs/{img_name}", "wb", encoding="utf-8"
+                            ) as img_data:
+                            img_data.write(img.content)
+                    except ConnectionError:
+                        self.console.log(
+                            "[bold red][-] Database is offline, cannot fetch files.[/bold red]"
+                        )
+                    else:
+                        return True, img_name
+                    return False, None
 
     def view_img(self, img_dir, scp_num):
         try:
@@ -72,8 +87,19 @@ class Utils:
             )
         else:
             return True
-
         return False
+
+    def view_md(self, scp_num):
+        with self.console.status(
+            "[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
+            spinner="bouncingBar"
+        ):
+            sleep(uniform(0.1, 5.0))
+            with open(f"database/proc.anomalies.d/scp_{scp_num}.md") as scp_data:
+                scp_md = Markdown(scp_data.read())
+
+            self.console.print(scp_md)
+
 
     def scp_search(self, scp_num):
         user_agent = UserAgent()
