@@ -10,11 +10,6 @@ def main(scp_num):
     sys.path.append("..")
 
     main_ui()
-
     if not os.path.isfile("database/fetch"):
         database_init()
-
-    print("\033c") # clear the terminal
-    main_md = md_init(scp_num)
-    if not main_md:
-        md_init(scp_num)
+    md_init(scp_num)

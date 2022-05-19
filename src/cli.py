@@ -60,7 +60,7 @@ def program_options():
         "-I",
         "--image",
         help="Display the image of the anomaly.",
-        action="store_true"
+        action="store"
     )
 
     args = parser.parse_args()
@@ -74,6 +74,8 @@ def program_options():
             main(args.decode)
         elif args.list:
             utils.scp_list()
+        elif args.image:
+            utils.view_img(args.image)
         elif args.version:
             with open("software.info", "r", encoding="utf-8") as info:
                 software_info = info.readlines()
