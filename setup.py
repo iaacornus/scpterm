@@ -1,12 +1,12 @@
-from xml.etree.ElementInclude import include
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as readme:
+
+with open("README.md", "r", encoding="utf-8") as readme:
     description = readme.read()
 
 setup(
     name="scp",
-    version="0.1.0a0",
+    version="0.2.0",
     author="iaacornus",
     author_email="iaacornus.devel@gmail.com",
     description="View SCP Foundation's entry from your terminal!",
@@ -20,7 +20,6 @@ setup(
         "utils/database_init",
         "utils/scp_utils",
         "tui/tui",
-        "misc/colors",
     ],
     include_package_data=True,
     package_dir={
@@ -31,26 +30,25 @@ setup(
     packages=find_packages(
         where="src",
         include=[
-            "misc",
             "utils",
             "tui"
         ]
     ),
-
     package_data={
         "program_help": ["program_help/wiki.md"],
         "img": ["img/scp_logo.txt"]
     },
     python_requires="<=3.10.4",
     install_requires=[
-        "requests",
-        "rich",
-        "bs4",
-        "random_user_agent",
-        "html5lib"
+        "requests<=2.27.1",
+        "rich<=12.4.1",
+        "bs4<=0.0.1",
+        "random_user_agent<=1.0.1",
+        "html5lib<=1.1",
+        "opencv-python<=4.5.5.64"
     ],
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 3 - Alpha",
         "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
         "Intended Audience :: End Users/Desktop",

@@ -31,35 +31,34 @@ def main_ui():
             width, height = os.get_terminal_size()
         except KeyboardInterrupt:
             print("\033c")
-    else:
-        with open(f"img/scp_logo.txt") as logo_ascii:
-            logo = logo_ascii.read()
 
-        time = 0
-        while time < 5000:
-            percent = round((time/50)/(5000/50), 2)*100
-            stages = [uniform(0.0, 100.0) for n in range(4)]
-            stages.sort()
+    with open("img/scp_logo.txt", encoding="utf-8") as logo_ascii:
+        logo = logo_ascii.read()
 
-            if percent < stages[0]:
-                process = "[=] Accessing database ..."
-            elif percent < stages[1]:
-                process = "[=] Searching for entry ..."
-            elif percent < stages[2]:
-                process = "[=] Collecting files of entry ..."
-            elif percent < stages[3]:
-                process = "[=] Preparing collected data ..."
+    time = 0
+    while time < 5000:
+        percent = round((time/50)/(5000/50), 2)*100
+        stages = [uniform(0.0, 100.0) for n in range(4)]
+        stages.sort()
 
-            panel = Panel(
-                Align(
-                    Text(
-                        f"{logo}\t\t\t{process}: {percent}%",
-                        style="bold"
-                    ),
-                    vertical="middle", align="center"
+        if percent < stages[0]:
+            process = "[=] Accessing database ..."
+        elif percent < stages[1]:
+            process = "[=] Searching for entry ..."
+        elif percent < stages[2]:
+            process = "[=] Collecting files of entry ..."
+        elif percent < stages[3]:
+            process = "[=] Preparing collected data ..."
+
+        panel = Panel(
+            Align(
+                Text(
+                    f"{logo}\t\t\t{process}: {percent}%",
+                    style="bold"
                 ),
-                width=width, height=(height-1)
-            )
-            console.print(panel)
-            time += uniform(0.1, 7.0)
-
+                vertical="middle", align="center"
+            ),
+            width=width, height=(height-1)
+        )
+        console.print(panel)
+        time += uniform(0.1, 7.0)

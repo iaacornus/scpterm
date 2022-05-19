@@ -31,17 +31,17 @@ def program_options():
         help="Do again the previous task",
         action="store_true"
     )
-    parser.add_argument(
-        "-fetch",
-        "--fetch",
-        help="Fetch new data from the database.",
-        action="store_true"
-    )
     # view the information of anomaly
     parser.add_argument(
         "-d",
         "--decode",
         help="View the information of anomaly.",
+        action="store"
+    )
+    parser.add_argument(
+        "-I",
+        "--image",
+        help="Display the image of the anomaly.",
         action="store"
     )
     parser.add_argument(
@@ -53,7 +53,7 @@ def program_options():
     parser.add_argument(
         "-v",
         "--version",
-        help="Show the version number of the software as well as other information",
+        help="Show the version number of the software as well as other information.",
         action="store_true"
     )
 
@@ -62,22 +62,22 @@ def program_options():
     try:
         if args.initiate:
             database_init(args.re)
-        elif args.fetch:
-            pass
         elif args.decode:
             main(args.decode)
         elif args.list:
             utils.scp_list()
+        elif args.image:
+            utils.view_img(args.image)
         elif args.version:
-            with open("software.info", "r") as info:
+            with open("software.info", "r", encoding="utf-8") as info:
                 software_info = info.readlines()
 
             for lines in software_info:
                 print(lines.replace("\n", ""))
 
             if "y" in console.input("[bold][:] Read license? [/bold]"):
-                with open("LICENSE", "r") as license:
-                    software_license = license.readlines()
+                with open("LICENSE", "r", encoding="utf-8") as _license_:
+                    software_license = _license_.readlines()
 
                 for lines in software_license:
                     print(lines.replace("\n", ""))
