@@ -135,9 +135,7 @@ class Utils:
                     os.mkdir("database/scp_imgs")
 
                 scp_img_metadata = soup.find("img", {"class": "scp-image"})
-                scp_img = str(scp_img_metadata).rsplit(" ", maxsplit=1)[-1]
-                # scp_img = str(scp_img_metadata).split(" ")[-1][5:-3]
-
+                scp_img = str(scp_img_metadata).split(" ")[-1][5:-3]
 
                 if scp_img.startswith("https://"):
                     try:
@@ -154,9 +152,9 @@ class Utils:
                         return True, f"database/scp_imgs/{img_name}"
 
     def view_img(self, scp_num):
-        check, img_dir = self.check_img(scp_num)
+        (check, img_dir), trial = self.check_img(scp_num), 0
 
-        while True:
+        while trial != 2:
             if check:
                 try:
                     img = cv.imread(f"{img_dir}", cv.IMREAD_ANYCOLOR)
@@ -173,7 +171,11 @@ class Utils:
                     return True
             else:
                 check, img_dir = self.fetch_img(scp_num)
-                continue
+
+        self.console.log(
+            f"[bold][red][-] Cannot fetch the image of [/red][cyan]SCP-{scp_num}[cyan][/bold]"
+        )
+
 
     def view_md(self, scp_num):
         with self.console.status(
