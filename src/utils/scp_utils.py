@@ -1,4 +1,3 @@
-import multiprocessing as mps
 import os
 import sys
 from time import process_time, sleep
@@ -29,81 +28,8 @@ class Utils:
             if response.status_code not in list(range(200, 299)):
                 raise ConnectionError
 
-    def check_img(self, scp_num):
-        for type_ in ["jpg", "png"]:
-            img_path = f"database/scp_imgs/scp_{scp_num}_img.{type_}"
-            if os.path.exists(img_path):
-                return True, img_path
-
-        return False, None
-
-    def fetch_img(self, soup, scp_num):
-        scp_img_check, scp_img_path = self.check_img(scp_num)
-
-        if scp_img_check:
-            return True, scp_img_path
-        else:
-            with self.console.status(
-                "[bold turquoise4][=] Fetching img of the anomaly ...[/bold turquoise4]"
-            ):
-                if not os.path.exists("database/scp_imgs"):
-                    os.mkdir("database/scp_imgs")
-                scp_img = soup.find("img", {"class": "scp-image"}).text.strip()
-
-                if scp_img.startswith("https://"):
-                    try:
-                        img = requests.get(scp_img)
-                        if scp_img[-3] not in ["jpg", "png"]:
-                            raise ConnectionError
-
-                        img_name = f"scp_{scp_num}_img.{scp_img[-3]}"
-
-                        with open(
-                                f"database/scp_imgs/{img_name}", "wb", encoding="utf-8"
-                            ) as img_data:
-                            img_data.write(img.content)
-                    except ConnectionError:
-                        self.console.log(
-                            "[bold red][-] Database is offline, cannot fetch files.[/bold red]"
-                        )
-                    else:
-                        return True, img_name
-                    return False, None
-
-    def view_img(self, img_dir, scp_num):
-        try:
-            img = cv.imread(f"{img_dir}", cv.IMREAD_ANYCOLOR)
-
-            while True:
-                cv.imshow(f"SCP-{scp_num}", img)
-                if cv.waitKey(1) & 0xFF == ord("q"):
-                    break
-
-            cv.destroyAllWindows()
-
-        except FileNotFoundError:
-            self.console.log(
-                "[bold red][-] The image requested does not exist in database, skipping.[/bold red]"
-            )
-        else:
-            return True
-        return False
-
-    def view_md(self, scp_num):
-        with self.console.status(
-            "[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
-            spinner="bouncingBar"
-        ):
-            sleep(uniform(0.1, 5.0))
-            with open(f"database/proc.anomalies.d/scp_{scp_num}.md") as scp_data:
-                scp_md = Markdown(scp_data.read())
-
-            self.console.print(scp_md)
-
-
     def scp_search(self, scp_num):
         user_agent = UserAgent()
-
         start_time = process_time()
         link = f"https://the-scp.foundation/object/scp-{scp_num}"
 
@@ -156,6 +82,109 @@ class Utils:
                     "[bold][green][+] Database initiated with total time of:[/green]"
                     + f"[cyan]{end_time-start_time}m[/cyan][/bold]"
                 )
+
+    def fetch_soup(self, scp_num):
+        if os.path.isfile(f"database/anomalies.list.d/scp_{scp_num}.info"):
+            with open(
+                f"database/anomalies.list.d/scp_{scp_num}.info", "r", encoding="utf-8"
+            ) as scp_info:
+                index = scp_info.read()
+                soup = bs(index, "html5lib")
+
+                return True, soup
+        else:
+            self.console.log(
+                f"[bold][red][-] [/red][cyan]SCP-{scp_num}[/cyan][red] does not exist.[/red]"
+            )
+            return False, None
+
+    def check_img(self, scp_num):
+        for type_ in ["jpg", "png"]:
+            img_path = f"database/scp_imgs/scp_{scp_num}_img.{type_}"
+            if os.path.exists(img_path):
+                return True, img_path
+
+        return False, None
+
+    def fetch_img(self, scp_num):
+        scp_img_check, scp_img_path = self.check_img(scp_num)
+
+        if scp_img_check:
+            return True, scp_img_path
+        else:
+            (check, soup), trial = self.fetch_soup(scp_num), 0
+            while not check:
+                self.console.log(
+                    f"[red]> Failed attempt, try: {trial}[/red]"
+                )
+                if trial == 2:
+                    self.console.log(
+                        "[bold red][-] Too many failed attempts, aborting.[/bold red]"
+                    )
+                    break
+                if "y" in self.console.input(
+                        f"[bold][:] Check SCP-{scp_num} in online database? [/bold]"
+                    ).lower():
+                    self.scp_search(scp_num)
+                    check, soup = self.fetch_soup(scp_num)
+
+            with self.console.status(
+                "[bold turquoise4][=] Fetching img of the anomaly ...[/bold turquoise4]"
+            ):
+                if not os.path.exists("database/scp_imgs"):
+                    os.mkdir("database/scp_imgs")
+
+                scp_img_metadata = soup.find("img", {"class": "scp-image"})
+                scp_img = str(scp_img_metadata).split(" ")[-1][5:-3]
+
+                if scp_img.startswith("https://"):
+                    try:
+                        img = requests.get(scp_img)
+                        img_name = f"scp_{scp_num}_img.{scp_img[-3:]}"
+
+                        with open(f"database/scp_imgs/{img_name}", "wb") as img_data:
+                            img_data.write(img.content)
+                    except ConnectionError:
+                        self.console.log(
+                            "[bold red][-] Database is offline, cannot fetch files.[/bold red]"
+                        )
+                    else:
+                        return True, f"database/scp_imgs/{img_name}"
+
+    def view_img(self, scp_num):
+        check, img_dir = self.check_img(scp_num)
+
+        while True:
+            if check:
+                try:
+                    img = cv.imread(f"{img_dir}", cv.IMREAD_ANYCOLOR)
+                    while True:
+                        cv.imshow(f"SCP-{scp_num}", img)
+                        if cv.waitKey(1) & 0xFF == ord("q"):
+                            break
+                    cv.destroyAllWindows()
+                except FileNotFoundError:
+                    self.console.log(
+                        "[bold red][-] The image requested does not exist in database, skipping.[/bold red]"
+                    )
+                else:
+                    return True
+            else:
+                check, img_dir = self.fetch_img(scp_num)
+                continue
+
+        return False
+
+    def view_md(self, scp_num):
+        with self.console.status(
+            "[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
+            spinner="bouncingBar"
+        ):
+            sleep(uniform(0.1, 5.0))
+            with open(f"database/proc.anomalies.d/scp_{scp_num}.md") as scp_data:
+                scp_md = Markdown(scp_data.read())
+
+            self.console.print(scp_md)
 
     def scp_list(self):
         if os.path.isfile("database/anomalies.list"):
