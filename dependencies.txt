@@ -1,5 +1,6 @@
-rich
-bs4
-requests
-random_user_agent
-html5lib
+rich<=12.4.1
+bs4<=0.0.1
+requests<=2.27.1
+random_user_agent<=1.0.1
+html5lib<=1.1
+opencv-python<=4.5.5.64
