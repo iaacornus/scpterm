@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as readme:
 
 setup(
     name="scp",
-    version="0.1.0a0",
+    version="0.2.0",
     author="iaacornus",
     author_email="iaacornus.devel@gmail.com",
     description="View SCP Foundation's entry from your terminal!",
@@ -20,7 +20,6 @@ setup(
         "utils/database_init",
         "utils/scp_utils",
         "tui/tui",
-        "misc/colors",
     ],
     include_package_data=True,
     package_dir={
@@ -31,7 +30,6 @@ setup(
     packages=find_packages(
         where="src",
         include=[
-            "misc",
             "utils",
             "tui"
         ]
@@ -50,7 +48,7 @@ setup(
         "opencv-python<=4.5.5.64"
     ],
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 3 - Alpha",
         "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
         "Intended Audience :: End Users/Desktop",
