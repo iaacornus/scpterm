@@ -2,8 +2,7 @@ import sys
 import os
 import re
 from datetime import datetime as time
-from random import uniform
-from time import sleep, process_time
+from time import process_time
 
 from bs4 import BeautifulSoup as bs
 from rich.markdown import Markdown
@@ -22,19 +21,12 @@ def md_init(scp_num):
     start_time = process_time()
 
     if os.path.isfile(f"database/proc.anomalies.d/scp_{scp_num}.md"):
-        utils.view_md()
-        with open(
-            f"database/proc.anomalies.d/scp_{scp_num}.md"
-        ) as scp_data:
-            scp_md = Markdown(scp_data.read())
-
-        console.print(scp_md)
+        utils.view_md(scp_num)
     else:
         if not os.path.exists("database/proc.anomalies.d"):
             os.mkdir("database/proc.anomalies.d")
 
         if os.path.isfile(f"database/anomalies.list.d/scp_{scp_num}.info"):
-            print("\033c") # clear the terminal
             with console.status(
                     "[bold turquoise4][=] Decoding the file ...[/bold turquoise4]",
                     spinner="bouncingBar"
@@ -78,11 +70,9 @@ def md_init(scp_num):
                     )
                     if fdesc.text.strip() not in ["\n", ""]
                 ][1]
-                scp_img_dir = utils.fetch_img(soup, scp_num)
 
                 with open(
-                        f"database/proc.anomalies.d/scp_{scp_num}.md",
-                        "w", encoding="utf-8"
+                        f"database/proc.anomalies.d/scp_{scp_num}.md", "w", encoding="utf-8"
                     ) as proc_scp_info:
                     proc_scp_info.write(
                         f"# {scp_code} ({scp_name})\n**Classification:** {scp_class}\n"
@@ -98,7 +88,7 @@ def md_init(scp_num):
                 + f"\n[cyan]{scp_code}: {scp_name} @{time.now().strftime('%H:%M:%S')}"
                 + f"\nElapsed time: {end_time-start_time}[/cyan]."
             )
-
+            utils.view_md(scp_num)
         else:
             console.log(
                 f"[bold][red][-] [/red][cyan]SCP-{scp_num}[/cyan][red] does not exist.[/red]"
@@ -113,3 +103,4 @@ def md_init(scp_num):
     console.log(
         f"[bold][?] File location: [cyan]database/proc.anomalies.d/scp_{scp_num}.md[/cyan]"
     )
+    return True
