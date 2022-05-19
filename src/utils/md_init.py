@@ -12,38 +12,27 @@ from rich.console import Console
 from utils.scp_utils import Utils
 
 
-def data_search(scp_num):
-    console = Console()
-
-    if os.path.isfile(f"database/proc.anomalies.d/scp_{scp_num}.md"):
-        print("\033c") # clear the terminal
-        console.log(
-            "[bold green][+] Decoded successfully[/bold green]"
-            + f"@[cyan]{time.now().strftime('%H:%M:%S')}[/cyan]."
-        )
-        with console.status(
-                "[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
-                spinner="bouncingBar"
-            ):
-            sleep(uniform(0.1, 5.7))
-            with open(f"database/proc.anomalies.d/scp_{scp_num}.md") as scp_data:
-                return Markdown(scp_data.read())
-    else:
-        return False
+console = Console()
+utils = Utils()
 
 
 def md_init(scp_num):
     sys.path.append("..")
 
     start_time = process_time()
-    console = Console()
-    utils = Utils()
-    scp_check = data_search(scp_num)
 
-    if not os.path.exists("database/proc.anomalies.d"):
-        os.mkdir("database/proc.anomalies.d")
+    if os.path.isfile(f"database/proc.anomalies.d/scp_{scp_num}.md"):
+        utils.view_md()
+        with open(
+            f"database/proc.anomalies.d/scp_{scp_num}.md"
+        ) as scp_data:
+            scp_md = Markdown(scp_data.read())
 
-    if not scp_check:
+        console.print(scp_md)
+    else:
+        if not os.path.exists("database/proc.anomalies.d"):
+            os.mkdir("database/proc.anomalies.d")
+
         if os.path.isfile(f"database/anomalies.list.d/scp_{scp_num}.info"):
             print("\033c") # clear the terminal
             with console.status(
@@ -89,7 +78,7 @@ def md_init(scp_num):
                     )
                     if fdesc.text.strip() not in ["\n", ""]
                 ][1]
-                # reference = soup.find("p", {"id": "reference"}).text.strip().split("\n")[-1]
+                scp_img_dir = utils.fetch_img(soup, scp_num)
 
                 with open(
                         f"database/proc.anomalies.d/scp_{scp_num}.md",
@@ -109,16 +98,7 @@ def md_init(scp_num):
                 + f"\n[cyan]{scp_code}: {scp_name} @{time.now().strftime('%H:%M:%S')}"
                 + f"\nElapsed time: {end_time-start_time}[/cyan]."
             )
-            with console.status(
-                    "[bold turquoise4][=] Opening decoded file ...[/bold turquoise4]",
-                    spinner="bouncingBar"
-                ):
-                sleep(uniform(0.1, 5.0))
 
-                with open(f"database/proc.anomalies.d/scp_{scp_num}.md") as scp_data:
-                    scp_md =Markdown(scp_data.read())
-
-                console.print(scp_md)
         else:
             console.log(
                 f"[bold][red][-] [/red][cyan]SCP-{scp_num}[/cyan][red] does not exist.[/red]"
@@ -129,10 +109,7 @@ def md_init(scp_num):
                 utils.scp_search(scp_num)
 
             return False
-    else:
-        console.print(scp_check)
 
     console.log(
         f"[bold][?] File location: [cyan]database/proc.anomalies.d/scp_{scp_num}.md[/cyan]"
     )
-    return True
