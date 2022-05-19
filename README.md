@@ -10,11 +10,17 @@ Access the SCP Foundation database from your terminal.
 
 # Installation
 
+## `whl` install
+
+The project can be installed using the `.whl` provided in the [releases](https://github.com/iaacornus/scpterm/releases), verify its `sha256` checksum for security, then using `python-pip`, the project can be installed: `pip install scp*.whl`.
+
+## Source compilation
+
 Clone or download the project repository, either via GUI or `git clone --branch <prefered branch> https://github.com/iaacornus/scpterm`, and build the project from source using `cd scpterm && python -m build`.
 
 # Usage
 
-[![v0.2.0](samples/sample_1.gif)](samples/0.2.0.gif)
+[![v0.2.0](samples/0.2.0.gif)](samples/0.2.0.gif)
 
 ```
 usage: scp [COMMAND] [OPTIONS] [INPUT]
