@@ -6,18 +6,20 @@ from main import main
 from utils.database_init import database_init
 from utils.scp_utils import Utils
 
+
 def program_options():
     console = Console()
     utils = Utils()
 
     description = """\
-        scpterm, a view classified information of SCP Foundation's anomalies in your terminal.
-    """
+            scpterm, a view classified information of SCP Foundation's
+            anomalies in your terminal.
+        """
     parser = argparse.ArgumentParser(
-        prog="scp",
-        usage="scp [COMMAND] [OPTIONS] [INPUT]",
-        description=description
-    )
+            prog="scp",
+            usage="scp [COMMAND] [OPTIONS] [INPUT]",
+            description=description
+        )
 
     parser.add_argument(
         "-init",
@@ -59,7 +61,7 @@ def program_options():
     parser.add_argument(
         "-v",
         "--version",
-        help="Show the version number of the software as well as other information.",
+        help="Software information.",
         action="store_true"
     )
 
@@ -84,29 +86,29 @@ def program_options():
                 print(lines.replace("\n", ""))
 
             if "y" in console.input("[bold][:] Read license? [/bold]"):
-                with open("LICENSE", "r", encoding="utf-8") as _license_:
-                    software_license = _license_.readlines()
+                with open("LICENSE", "r", encoding="utf-8") as license:
+                    software_license = license.readlines()
 
                 for lines in software_license:
                     print(lines.replace("\n", ""))
         else:
-            console.log(
-                "[bold red][-] Options not found.[/bold red]"
+            console.print(
+                "[-] Selected option not found, aborting", style="bold red"
             )
             raise SystemExit
     except ConnectionError: # add other exceptions later
-        console.log(
-            "[bold red][-] Connection error.[/bold red]"
+        console.print(
+            "[-] Connection error, aborting ...", style="bold red"
         )
         raise SystemExit
     except KeyboardInterrupt:
-        console.log(
-            "[bold red][-] Keyboard interrupt.[/bold red]"
+        console.print(
+            "[-] Keyboard interrupt, aborting", style="bold red"
         )
         raise SystemExit
     except SystemError:
-        console.log(
-            "[bold red][-] System error.[/bold red]"
+        console.print(
+            "[-] System error, aborting ...", style="bold red"
         )
         raise SystemExit
 

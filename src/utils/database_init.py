@@ -17,8 +17,10 @@ def database_init(re_init=False):
     utils = Utils()
     console = Console()
     user_agent = UserAgent()
-    init = True
 
+    DATABASE_PATH = "database/anomalies.list.d"
+
+    init = True
     start_time = process_time()
     link = "https://the-scp.foundation/"
 
@@ -28,23 +30,23 @@ def database_init(re_init=False):
 
         if re_init:
             if "y" in console.input(
-                    "[bold][:] Database already exists (last fetch:"
+                    "[bold]> Database already exists (last fetch:"
                     + f"[cyan]{data_info[1]}[/cyan]). Re-initiate? [/bold]"
                 ).lower():
-                for root, _, files in os.walk("database"):
-                    for file in files:
-                        os.remove(os.path.join(root, file))
-
-                console.log(
-                    "[bold green][+] Database removed, re-initiating ...[/bold green]"
-                )
+                with console.status(
+                        "[bold][>] Removing previous database ...[/bold]",
+                        spinner="bouncingBar"
+                    ):
+                    for root, _, files in os.walk("database"):
+                        for file in files:
+                            console.print(f">>> Removing: {file}")
+                            os.remove(os.path.join(root, file))
             else:
-                console.log("[bold red][-] Process aborted.[/bold red]")
+                console.print("[!] Process aborted.", style="bold red")
                 raise SystemExit
         else:
-            console.log(
-                "[bold][?] Database already exists (last fetch:"
-                + f"[cyan]{data_info[1]}[/cyan]).[/bold]"
+            console.print(
+                f"[*] Database last fetch: [cyan]{data_info[1]}[/cyan])."
             )
             init = False
 
@@ -52,30 +54,33 @@ def database_init(re_init=False):
         try:
             utils.check_status(link, user_agent.get_random_user_agent())
         except ConnectionError:
-            console.log(
-                "[bold red][-] Database is offline, cannot initiate.[/bold red]"
+            console.print(
+                "[!] Database is offline, cannot initiate.", style="bold red"
             )
         else:
-            console.log(
-                "[bold red][^] Some of the anomalies would not be fetched "
-                + "due to classified reason.[/bold red] Press any key to continue."
+            console.input(
+                "[*] Some of the anomalies would not be fetched due to"
+                + "classified reason. Press any key to continue."
             )
-            input()
 
             with open("database/fetch" ,"w", encoding="utf-8") as data:
-                data.write(f"Fetched data:\n{time.now().strftime('%d:%m/%H:%M:%S')}")
-
-            if not os.path.exists("database/anomalies.list.d"):
-                console.log(
-                    "[turquoise4]> Creating directory for data of anomalies ...[/turquoise4]"
+                data.write(
+                    f"Fetched data:\n{time.now().strftime('%d:%m/%H:%M:%S')}"
                 )
-                os.mkdir("database/anomalies.list.d")
+
+            if not os.path.exists(DATABASE_PATH):
+                console.log(
+                    ">>> Creating directory for data of anomalies ..."
+                )
+                os.mkdir(DATABASE_PATH)
 
             with console.status(
-                "[bold turquoise4][=] Fetching anomalies information ...[/bold turquoise4]",
-                spinner="bouncingBar"
-            ):
-                with open("database/anomalies.list", "a", encoding="utf-8") as anomalies:
+                    "[bold][>] Fetching information of anomalies...[/bold]",
+                    spinner="bouncingBar"
+                ):
+                with open(
+                        "database/anomalies.list", "a", encoding="utf-8"
+                    ) as anomalies:
                     for i in range(1, 1000):
                         if len(f"{i}") == 1:
                             scp_num = f"00{i}"
@@ -87,38 +92,41 @@ def database_init(re_init=False):
                         anomalies.write(f"SCP-{scp_num}: {scp_link}\n")
 
                         console.log(
-                            f"[turquoise4]> Fetching data: [turquoise4][cyan]SCP-{scp_num}[/cyan]"
+                            f">>> Fetching data: [cyan]SCP-{scp_num}[/cyan]"
                         )
 
                         # fetch the html from the page
-                        new_header = {"User-Agent": user_agent.get_random_user_agent()}
+                        new_header = {
+                                "User-Agent": user_agent.get_random_user_agent()
+                            }
                         scp_data = requests.get(scp_link, headers=new_header)
                         soup = bs(scp_data.content, "html5lib")
 
                         if scp_data.status_code in list(range(200, 299)):
                             console.log(
-                                f"[turquoise4]> Metadata: [/turquoise4][cyan]SCP-{scp_num}[/cyan]"
-                                + "[turquoise4] fetched, writing to database ...[/turquoise4]"
+                                f"[*] Metadata: [cyan]SCP-{scp_num}[/cyan]"
+                                + " fetched, writing to database ..."
                             )
                             with open(
-                                    f"database/anomalies.list.d/scp_{scp_num}.info",
-                                    "w", encoding="utf-8"
+                                    f"{DATABASE_PATH}/scp_{scp_num}.info",
+                                    "w",
+                                    encoding="utf-8"
                                 ) as scp_info:
                                 scp_info.write(soup.prettify())
 
-                            console.log(
-                                f"[green][+] Data of [/green][cyan]SCP-{scp_num}[/cyan]"
-                                + "[green] written successfully to database.[/green]"
+                            console.print(
+                                f"[green]+>> DATA: [/green]SCP-{scp_num}"
+                                + f"[green] written in database [/green]"
                             )
                         else:
-                            console.log(
-                                f"[red][-] Skipping [/red][cyan]SCP-{scp_num}[/cyan]"
+                            console.print(
+                                f"[red]!>> Skipping [/red]SCP-{scp_num}"
                                 + "[red], connection error.[/red]"
                             )
 
                 end_time = process_time()
-                console.log(
-                    "[bold][green][+] Database initiated with total time of:[/green]"
+                console.print(
+                    "[bold][=] Database initiated with total time of:"
                     + f"[cyan]{end_time-start_time}m[/cyan][/bold]"
                 )
 

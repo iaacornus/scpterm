@@ -1,7 +1,6 @@
 import sys
 import os
 import re
-from datetime import datetime as time
 from time import process_time
 
 from rich.console import Console
@@ -9,39 +8,42 @@ from rich.console import Console
 from utils.scp_utils import Utils
 
 
-console = Console()
-utils = Utils()
-
-
 def md_init(scp_num):
-    sys.path.append("..")
+    console = Console()
+    utils = Utils()
 
     start_time = process_time()
+    ANOMALIES_PATH = "database/proc.anomalies.d"
+    sys.path.append("..")
 
-    if not os.path.isfile(f"database/proc.anomalies.d/scp_{scp_num}.md"):
-        if not os.path.exists("database/proc.anomalies.d"):
-            os.mkdir("database/proc.anomalies.d")
+    if not os.path.isfile(f"{ANOMALIES_PATH}/scp_{scp_num}.md"):
+        if not os.path.exists(ANOMALIES_PATH):
+            console.print(">>> Creating file for decoded data ...")
+            os.mkdir(ANOMALIES_PATH)
 
-        (check, soup), trial = utils.fetch_soup(scp_num), 0
-        while not check:
-            utils.console.log(
-                f"[red]> Failed attempt, try: {trial}[/red]"
-            )
-            if trial == 2:
-                console.log(
-                    "[bold red][-] Too many failed attempts, aborting.[/bold red]"
-                )
-                break
-            if "y" in console.input(
-                    f"[bold][:] Check [cyan]SCP-{scp_num}[/cyan] in online database? [/bold]"
-                ).lower():
-                utils.scp_search(scp_num)
-                check, soup = utils.fetch_soup(scp_num)
+        check, soup = utils.fetch_soup(scp_num),
+        try:
+            for _ in range(3):
+                ans = console.input(
+                        f"[bold]> Check [cyan]SCP-{scp_num}[/cyan] in"
+                        + "online database? [/bold]"
+                    ).lower()
+                if "y" in ans:
+                    utils.scp_search(scp_num)
+                    check, soup = utils.fetch_soup(scp_num)
 
+                    if check:
+                        break
+                    else:
+                        continue
+                raise ConnectionError
+        except ConnectionError:
+            raise SystemExit
+        else:
+            pass
 
         with console.status(
-                "[bold turquoise4][=] Decoding the file ...[/bold turquoise4]",
-                spinner="bouncingBar"
+                "[bold][>] Decoding the file ...[/bold]", spinner="bouncingBar"
             ):
             # begin extraction of data
             scp_code = f"SCP-{scp_num}"
@@ -50,37 +52,48 @@ def md_init(scp_num):
             # class is the general classification of the scp
             scp_class = soup.find("div", {"class": "scp-tag"}).text.strip()
             scp_classifications = [ # while this one is the other classifications
-                fc.text.strip() for fc in list(
-                    soup.find("aside", {"class": "scp-sidebar"})
-                )
-                if fc.text.strip() != ""
-            ]
+                    fc.text.strip() for fc in list(
+                        soup.find("aside", {"class": "scp-sidebar"})
+                    )
+                    if fc.text.strip() != ""
+                ]
 
             scp_cp = [ # special containment procedures
-                cp_text.text.strip() for cp_text in [
-                    extr for extr in soup.find(
-                        "div", {"class": "scp-special-containment-procedures"}
-                    )
-                    if not (
-                            re.search("scp-image-block block-right", str(extr))
-                            or re.search("special-containment-procedures", str(extr))
+                    cp_text.text.strip() for cp_text in [
+                        extr for extr in soup.find(
+                            "div", {
+                                    "class": "scp-special-containment-procedures"
+                                }
                         )
+                        if not (
+                                re.search(
+                                        "scp-image-block block-right",
+                                        str(extr)
+                                    )
+                                or re.search(
+                                        "special-containment-procedures",
+                                        str(extr)
+                                    )
+                            )
+                    ]
+                    if (cp_text.text.strip() not in ["\n", ""])
                 ]
-                if (cp_text.text.strip() not in ["\n", ""])
-            ]
 
             scp_description = [ # scp description
-                fdesc.text.strip() for fdesc in list(
-                    soup.find("div", {"class": "scp-description"})
-                )
-                if fdesc.text.strip() not in ["\n", ""]
-            ][1]
+                    fdesc.text.strip() for fdesc in list(
+                        soup.find("div", {"class": "scp-description"})
+                    )
+                    if fdesc.text.strip() not in ["\n", ""]
+                ][1]
 
             with open(
-                    f"database/proc.anomalies.d/scp_{scp_num}.md", "w", encoding="utf-8"
+                    f"ANOMALIES_PATH/scp_{scp_num}.md",
+                    "w",
+                    encoding="utf-8"
                 ) as proc_scp_info:
                 proc_scp_info.write(
-                    f"# {scp_code} ({scp_name})\n**Classification:** {scp_class}\n"
+                    f"# {scp_code} ({scp_name})\n"
+                    + f"**Classification:** {scp_class}\n"
                     + f"\n_Further classification:_ {scp_classifications}\n"
                     + "## Special Containment Procedures\n"
                     + f"{' '.join(list(scp_cp))}\n"
@@ -88,16 +101,12 @@ def md_init(scp_num):
                 )
 
         end_time = process_time()
-        console.log(
-            "[bold green][+] Decoded successfully[/bold green]:"
-            + f"\n[cyan]{scp_code}: {scp_name} @{time.now().strftime('%H:%M:%S')}"
-            + f"\nElapsed time: {end_time-start_time}[/cyan]."
+        console.print(
+            "[bold green][+] Data decoded successfully.[/bold green]"
+            + f"\Annomaly: [cyan]{scp_code}, {scp_name}[/cyan]"
+            + f"\nElapsed time: [cyan]{end_time-start_time}[/cyan]."
         )
 
     print("\033c") # clear the terminal
     utils.view_md(scp_num)
     utils.view_img(scp_num)
-
-    console.log(
-        f"[bold][?] File location: [cyan]database/proc.anomalies.d/scp_{scp_num}.md[/cyan]"
-    )

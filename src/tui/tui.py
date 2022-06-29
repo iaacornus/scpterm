@@ -9,24 +9,24 @@ from rich.align import Align
 
 
 def main_ui():
-    sys.path.append("..")
-
     width, height = os.get_terminal_size()
     console = Console()
+
+    sys.path.append("..")
 
     while (width < 108) or (height < 32):
         try:
             panel = Panel(
-                Align(
-                    Text(
-                        "Please resize your terminal.",
-                        justify="center",
-                        style="bold red"
+                    Align(
+                        Text(
+                            "Please resize your terminal.",
+                            justify="center",
+                            style="bold red"
+                        ),
+                        vertical="middle", align="center"
                     ),
-                    vertical="middle", align="center"
-                ),
-                width=width, height=(height-1)
-            )
+                    width=width, height=(height-1)
+                )
             console.print(panel)
             width, height = os.get_terminal_size()
         except KeyboardInterrupt:
@@ -51,14 +51,14 @@ def main_ui():
             process = "[=] Preparing collected data ..."
 
         panel = Panel(
-            Align(
-                Text(
-                    f"{logo}\t\t\t{process}: {percent}%",
-                    style="bold"
+                Align(
+                    Text(
+                        f"{logo}\t\t\t{process}: {percent}%",
+                        style="bold"
+                    ),
+                    vertical="middle", align="center"
                 ),
-                vertical="middle", align="center"
-            ),
-            width=width, height=(height-1)
-        )
+                width=width, height=(height-1)
+            )
         console.print(panel)
         time += uniform(0.1, 7.0)
